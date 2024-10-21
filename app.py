@@ -4,7 +4,7 @@ import mysql.connector
 import os
 
 app = Flask(__name__)
-CORS(app)  # Permitir CORS para todas las rutas
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Configura tu conexión a la base de datos
 db_config = {
@@ -50,7 +50,9 @@ def get_data():
         results = cursor.fetchall()
         cursor.close()
         conn.close()
+        print(results)
         return jsonify(results), 200  # Devuelve los resultados como JSON
+        
     except mysql.connector.Error as err:
         return jsonify({"status": "error", "message": str(err)}), 500
 
