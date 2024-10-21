@@ -41,6 +41,18 @@ def insert_data():
     else:
         return jsonify({"status": "error", "message": "Request must be JSON"}), 400
 
+@app.route("/data", methods=["GET"])
+def get_data():
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)  # Para obtener resultados como diccionarios
+        cursor.execute("SELECT * FROM sensor_data")  # Consulta para obtener todos los datos
+        results = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify(results), 200  # Devuelve los resultados como JSON
+    except mysql.connector.Error as err:
+        return jsonify({"status": "error", "message": str(err)}), 500
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
